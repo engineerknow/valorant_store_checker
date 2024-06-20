@@ -22,6 +22,7 @@ class _AddAccountCardState extends State<AddAccountCard> {
     var formKey = GlobalKey<FormState>();
 
     var regions = [
+      'TH',
       'NA',
       'EU',
       'KR',
@@ -34,7 +35,6 @@ class _AddAccountCardState extends State<AddAccountCard> {
             context: context,
             builder: (BuildContext context) {
               return SingleChildScrollView(
-
                 // Alert Dialog shape
                 child: StatefulBuilder(
                   builder: (context, setState) => AlertDialog(
@@ -42,93 +42,102 @@ class _AddAccountCardState extends State<AddAccountCard> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    title: const Center(child: Text('Add your Valorant Account')),
-                    content: SizedBox(
-                      height: 180.h,
-                      width: 250.w,
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          children: [
-                            // Username
-                            TextFormField(
-                              controller: usernameControl,
-                              style: const TextStyle(color: white),
-                              cursorColor: white,
-                              maxLength: 20,
-                              validator: (value) {
-                                if (value == '') {
-                                  return 'Username cant be empty';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelStyle: TextStyle(color: white),
-                                labelText: 'username',
-                              ),
-                            ),
-
-                            // Password
-                            Padding(
-                              padding: EdgeInsets.only(top: 15.h),
-                              child: TextFormField(
-                                controller: passwordControl,
+                    title:
+                        const Center(child: Text('Add your Valorant Account')),
+                    content: SingleChildScrollView(
+                      child: SizedBox(
+                        width: 250.w,
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Username
+                              TextFormField(
+                                controller: usernameControl,
                                 style: const TextStyle(color: white),
                                 cursorColor: white,
+                                maxLength: 20,
                                 validator: (value) {
                                   if (value == '') {
-                                    return 'Password cant be empty';
+                                    return 'Username can\'t be empty';
                                   }
                                   return null;
                                 },
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelStyle: TextStyle(color: white),
-                                  labelText: 'password',
+                                  labelText: 'Username',
                                 ),
-                                obscureText: true,
                               ),
-                            ),
-                            DropdownButton(
-                              value: dropdownValue,
-                              style: const TextStyle(color: white),
-                              dropdownColor: black,
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                              items: regions.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              },
-                            ),
-                          ],
+
+                              // Password
+                              Padding(
+                                padding: EdgeInsets.only(top: 15.h),
+                                child: TextFormField(
+                                  controller: passwordControl,
+                                  style: const TextStyle(color: white),
+                                  cursorColor: white,
+                                  validator: (value) {
+                                    if (value == '') {
+                                      return 'Password can\'t be empty';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelStyle: TextStyle(color: white),
+                                    labelText: 'Password',
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                              DropdownButton(
+                                value: dropdownValue,
+                                style: const TextStyle(color: white),
+                                dropdownColor: black,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                items: regions.map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     actions: [
                       ElevatedButton(
-                          onPressed: () {
-                            bool validResult = formKey.currentState!.validate();
-                            if (validResult == true) {
-                              Account newAccount = Account(
-                                  usernameControl.text, passwordControl.text, dropdownValue);
-                              Provider.of<AccountProvider>(context, listen: false)
-                                  .addAccount(newAccount);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: const Text('Add')),
-                      TextButton(
-                          onPressed: () {
+                        onPressed: () {
+                          bool validResult = formKey.currentState!.validate();
+                          if (validResult == true) {
+                            Account newAccount = Account(
+                              usernameControl.text,
+                              passwordControl.text,
+                              dropdownValue,
+                            );
+                            Provider.of<AccountProvider>(context, listen: false)
+                                .addAccount(newAccount);
                             Navigator.pop(context);
-                          },
-                          child: const Text('Cancel')),
+                          }
+                        },
+                        child: const Text('Add'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
                     ],
                   ),
                 ),
